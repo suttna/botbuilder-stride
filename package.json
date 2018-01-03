@@ -1,0 +1,43 @@
+{
+  "name": "botbuilder-stride",
+  "version": "0.0.1",
+  "description": "Stride Connector for botbuilder.",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "test": "jest --config jest.json --forceExit --runInBand --verbose",
+    "build": "yarn build:src",
+    "build:src": "tsc",
+    "build:tests": "tsc -p __tests__/tsconfig.json",
+    "watch": "tsc --watch",
+    "lint": "tslint 'src/**/*.ts' '__tests__/**/*.ts'",
+    "ci": "yarn lint && yarn build:src && yarn build:tests && yarn test",
+    "prepare": "yarn build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/suttna/botbuilder-stride.git"
+  },
+  "keywords": [
+    "bot",
+    "node",
+    "botframework",
+    "botbuilder",
+    "stride",
+    "connector"
+  ],
+  "author": "Santiago Doldán <santiagodoldan@icloud.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/suttna/botbuilder-stride#readme",
+  "dependencies": {
+    "botbuilder": "^3.13.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^22.0.0",
+    "@types/node": "^8.5.2",
+    "jest": "^22.0.4",
+    "ts-jest": "^22.0.0",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.2"
+  }
+}
