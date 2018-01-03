@@ -1,0 +1,35 @@
+{
+  "name": "botbuilder-stride-example",
+  "version": "0.0.1",
+  "description": "Stride connector example app.",
+  "scripts": {
+    "start": "ts-node src/app.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/suttna/botbuilder-stride.git"
+  },
+  "keywords": [
+    "bot",
+    "node",
+    "botframework",
+    "botbuilder",
+    "stride",
+    "connector"
+  ],
+  "author": "Santiago Doldán <santiagodoldan@icloud.com>",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "botbuilder": "^3.13.1",
+    "botbuilder-stride": "file:../",
+    "express": "^4.16.2"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.16.8",
+    "@types/express": "^4.11.0",
+    "@types/node": "^8.5.2",
+    "ts-node": "^4.1.0",
+    "typescript": "^2.6.2"
+  }
+}
