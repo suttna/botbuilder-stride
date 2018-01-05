@@ -30,11 +30,13 @@
   "license": "MIT",
   "homepage": "https://github.com/suttna/botbuilder-stride#readme",
   "dependencies": {
-    "botbuilder": "^3.13.1"
+    "botbuilder": "^3.13.1",
+    "request-promise-native": "^1.0.5"
   },
   "devDependencies": {
     "@types/jest": "^22.0.0",
     "@types/node": "^8.5.2",
+    "@types/request-promise-native": "^1.0.10",
     "jest": "^22.0.4",
     "ts-jest": "^22.0.0",
     "tslint": "^5.8.0",

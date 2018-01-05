@@ -10,6 +10,11 @@ const settings = {
   botName: process.env.STRIDE_BOT_NAME,
   clientId: process.env.STRIDE_CLIENT_ID,
   clientSecret: process.env.STRIDE_CLIENT_SECRET,
+  cache: {
+    getCloudIdByBot: async () => {
+      return Promise.resolve(process.env.SUTTNA_BOT_CLOUD_ID)
+    },
+  },
 }
 
 const connector = new StrideConnector(settings)
@@ -22,6 +27,8 @@ app.use(bodyParser.urlencoded())
 
 bot.dialog("/", (session) => {
   console.info(session.message)
+
+  session.say(session.message.text)
 })
 
 app.listen(port, () => {

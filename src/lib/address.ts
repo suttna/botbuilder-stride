@@ -1,5 +1,5 @@
-import { StrideConversationType } from "./interfaces"
-import { IStrideAddress } from "./stride_connector"
+import { StrideConversationType } from "../interfaces"
+import { IStrideAddress } from "../stride_connector"
 
 export class Address {
   private data = {} as IStrideAddress
