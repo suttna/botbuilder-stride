@@ -1,6 +1,6 @@
 import { IEvent, Message } from "botbuilder"
-import { Address } from "../address"
 import { StrideEventType } from "../interfaces"
+import { Address } from "../lib/address"
 import { BaseInteractor, IInteractorResult } from "./base_interactor"
 
 export class EventInteractor extends BaseInteractor {
