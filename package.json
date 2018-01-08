@@ -35,9 +35,11 @@
   },
   "devDependencies": {
     "@types/jest": "^22.0.0",
+    "@types/nock": "^9.1.1",
     "@types/node": "^8.5.2",
     "@types/request-promise-native": "^1.0.10",
     "jest": "^22.0.4",
+    "nock": "^9.1.5",
     "ts-jest": "^22.0.0",
     "tslint": "^5.8.0",
     "typescript": "^2.6.2"
