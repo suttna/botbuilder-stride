@@ -16,10 +16,14 @@ export class AccessToken {
 
   private static instance: AccessToken
 
-  public value: string
-  public expiresIn: number
+  private accessToken: string
+  private expiresIn: number
 
   private constructor() { }
+
+  public get token(): string {
+    return this.accessToken
+  }
 
   /**
    * Returns true if the stored token in memory is still active.
@@ -37,7 +41,15 @@ export class AccessToken {
    * @param {IAccessTokenResponse} newToken
    */
   public update(newToken: IAccessTokenResponse): void {
-    this.value = newToken.access_token
+    this.accessToken = newToken.access_token
     this.expiresIn = Date.now() + (newToken.expires_in * 1000)
+  }
+
+  /**
+   * Clears the in memory token.
+   */
+  public clear(): void {
+    this.accessToken = null
+    this.expiresIn = null
   }
 }

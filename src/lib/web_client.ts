@@ -33,9 +33,9 @@ export class WebClient {
   }
 
   public async getAccessToken(): Promise<string> {
-    const token = AccessToken.getInstance()
+    const accessToken = AccessToken.getInstance()
 
-    if (!token.isValid()) {
+    if (!accessToken.isValid()) {
       const options = {
         uri: this.oauthBaseUrl,
         method: "POST",
@@ -47,10 +47,10 @@ export class WebClient {
         },
       }
 
-      token.update(await rpn(options))
+      accessToken.update(await rpn(options))
     }
 
-    return token.value
+    return accessToken.token
   }
 
   private get baseUri(): string {
