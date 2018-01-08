@@ -1,5 +1,6 @@
 import * as rpn from "request-promise-native"
 import { IStrideCredentials } from "../stride_connector"
+import { AccessToken } from "./access_token"
 
 export enum StrideBodyType {
   Doc = "doc",
@@ -32,18 +33,24 @@ export class WebClient {
   }
 
   public async getAccessToken(): Promise<string> {
-    const options = {
-      uri: this.oauthBaseUrl,
-      method: "POST",
-      json: {
-        grant_type: "client_credentials",
-        client_id: this.credentials.clientId,
-        client_secret: this.credentials.clientSecret,
-        audience: "api.atlassian.com",
-      },
+    const token = AccessToken.getInstance()
+
+    if (!token.isValid()) {
+      const options = {
+        uri: this.oauthBaseUrl,
+        method: "POST",
+        json: {
+          grant_type: "client_credentials",
+          client_id: this.credentials.clientId,
+          client_secret: this.credentials.clientSecret,
+          audience: "api.atlassian.com",
+        },
+      }
+
+      token.update(await rpn(options))
     }
 
-    return (await rpn(options)).access_token
+    return token.value
   }
 
   private get baseUri(): string {
