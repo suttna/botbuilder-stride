@@ -2,6 +2,13 @@ import * as rpn from "request-promise-native"
 import { IStrideCredentials } from "../stride_connector"
 import { AccessToken } from "./access_token"
 
+enum HTTP {
+  Get = "GET",
+  Post = "POST",
+  Put = "PUT",
+  Delete = "DELETE",
+}
+
 export enum StrideBodyType {
   Doc = "doc",
 }
@@ -27,7 +34,23 @@ export class WebClient {
   public async postMessage(conversationId: string, body: IStrideMessage) {
     const token   = await this.getAccessToken()
     const uri     = `${this.baseUri}/conversation/${conversationId}/message`
-    const options = { uri, method: "POST", headers: this.buildHeaders(token), json: { body } }
+    const options = { uri, method: HTTP.Post, headers: this.buildHeaders(token), json: { body } }
+
+    return rpn(options)
+  }
+
+  public async deleteMessage(conversationId: string, messageId: string) {
+    const token   = await this.getAccessToken()
+    const uri     = `${this.baseUri}/conversation/${conversationId}/message/${messageId}`
+    const options = { uri, method: HTTP.Delete, headers: this.buildHeaders(token) }
+
+    return rpn(options)
+  }
+
+  public async updateMessage(conversationId: string, messageId: string, body: IStrideMessage) {
+    const token   = await this.getAccessToken()
+    const uri     = `${this.baseUri}/conversation/${conversationId}/message/${messageId}`
+    const options = { uri, method: HTTP.Put, headers: this.buildHeaders(token), json: { body } }
 
     return rpn(options)
   }
@@ -38,7 +61,7 @@ export class WebClient {
     if (!accessToken.isValid()) {
       const options = {
         uri: this.oauthBaseUrl,
-        method: "POST",
+        method: HTTP.Post,
         json: {
           grant_type: "client_credentials",
           client_id: this.credentials.clientId,

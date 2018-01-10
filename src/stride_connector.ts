@@ -1,4 +1,4 @@
-import { IAddress, IConnector, IEvent, IMessage } from "botbuilder"
+import { IAddress, IChatConnectorAddress, IConnector, IEvent, IMessage } from "botbuilder"
 import { EventInteractor } from "./interactors"
 import { IStrideMessage, StrideBodyType, StrideContentType, WebClient } from "./lib/web_client"
 
@@ -86,16 +86,38 @@ export class StrideConnector implements IConnector {
     .catch((err) => cb(err, null))
   }
 
-  public startConversation(address: IAddress, cb: (err: Error, address?: IAddress) => void) {
-    // no-op
+  public startConversation(address: IAddress, cb: (err: Error, address?: IAddress) => void): void {
+    // TODO this needs this first => https://jira.atlassian.com/browse/STRIDE-965
   }
 
-  public update(message: IMessage, done: (err: Error, address?: IAddress) => void) {
-    // no-op
+  public update(message: IMessage, done: (err: Error, address?: IAddress) => void): void {
+    (async () => {
+      const address = message.address as IChatConnectorAddress
+      const text    = this.transformTextToStrideFormat(message.text)
+      const client  = await this.createClient(address.bot.id)
+
+      try {
+        address.id = (await client.updateMessage(address.conversation.id, address.id, text)).id
+
+        done(null, address)
+      } catch (err) {
+        done(err)
+      }
+    })()
   }
 
-  public delete(address: IAddress, done: (err: Error) => void) {
-    // no-op
+  public delete(address: IChatConnectorAddress, done: (err?: Error) => void): void {
+    (async () => {
+      const client = await this.createClient(address.bot.id)
+
+      try {
+        await client.deleteMessage(address.conversation.id, address.id)
+
+        done()
+      } catch (err) {
+        done(err)
+      }
+    })()
   }
 
   private dispatchEvents(events: IEvent[]): void {

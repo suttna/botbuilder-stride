@@ -1,5 +1,5 @@
 import * as bodyParser from "body-parser"
-import { UniversalBot } from "botbuilder"
+import { Message, UniversalBot } from "botbuilder"
 import { StrideConnector } from "botbuilder-stride"
 import * as express from "express"
 
@@ -28,7 +28,20 @@ app.use(bodyParser.urlencoded())
 bot.dialog("/", (session) => {
   console.info(session.message)
 
-  session.say(session.message.text)
+  bot.send(session.message, (err, addresses) => {
+    if (session.message.text === "update") {
+      const message = new Message().address(addresses[0]).text(`${session.message.text} edited`).toMessage()
+
+      connector.update(message, (err2, newAddress) => {
+        console.error(err2)
+        console.info(newAddress)
+      })
+    } else if (session.message.text === "delete") {
+      connector.delete(addresses[0], (err2) => {
+        console.error(err2)
+      })
+    }
+  })
 })
 
 app.listen(port, () => {
