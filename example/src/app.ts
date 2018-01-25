@@ -1,7 +1,8 @@
 import * as bodyParser from "body-parser"
-import { Message, UniversalBot } from "botbuilder"
+import { IIntentRecognizerResult, UniversalBot } from "botbuilder"
 import { StrideConnector } from "botbuilder-stride"
 import * as express from "express"
+import * as dialogs from "./dialogs"
 
 const port = process.env.PORT || 8080
 
@@ -18,34 +19,42 @@ const settings = {
 }
 
 const connector = new StrideConnector(settings)
-const bot = new UniversalBot(connector)
-
-const app = express()
+const bot       = new UniversalBot(connector)
+const app       = express()
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded())
 
-bot.dialog("/", (session) => {
-  console.info(session.message)
+const COMMANDS = ["direct-message", "update", "delete"]
 
-  bot.send(session.message, (err, addresses) => {
-    if (session.message.text === "update") {
-      const message = new Message().address(addresses[0]).text(`${session.message.text} edited`).toMessage()
+// Detect possible commands
+bot.recognizer({
+  recognize: (context, done) => {
+    const match   = context.message.text.match(/^(?:@.+ )?(.+)$/)
+    const command = match ? COMMANDS.find((c) => c === match[1]) : null
 
-      connector.update(message, (err2, newAddress) => {
-        console.error(err2)
-        console.info(newAddress)
-      })
-    } else if (session.message.text === "delete") {
-      connector.delete(addresses[0], (err2) => {
-        console.error(err2)
-      })
+    if (!command) {
+      return done(null, { score: 0.0 } as IIntentRecognizerResult)
     }
-  })
+
+    return done(null, { score: 1.0, intent: command })
+  },
+})
+
+dialogs.initialize(bot)
+
+// Default dialog
+bot.dialog("/", (session) => {
+  session.endDialog("Hey there!")
 })
 
 app.listen(port, () => {
   console.log(`Bot is listening on port ${port}`)
+})
+
+app.post("/installed", (req, res, next) => {
+  res.send(200)
+  next()
 })
 
 app.post("/stride/bot-(mention|direct-message)", connector.listenEvents())
