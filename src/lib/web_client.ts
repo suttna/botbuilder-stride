@@ -55,6 +55,14 @@ export class WebClient {
     return rpn(options)
   }
 
+  public async openConversation(userId: string) {
+    const token   = await this.getAccessToken()
+    const uri     = `${this.baseUri}/conversation/user/${userId}`
+    const options = { uri, method: HTTP.Get, headers: this.buildHeaders(token) }
+
+    return JSON.parse(await rpn(options))
+  }
+
   public async getAccessToken(): Promise<string> {
     const accessToken = AccessToken.getInstance()
 

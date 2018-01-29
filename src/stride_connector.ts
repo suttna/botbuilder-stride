@@ -87,7 +87,16 @@ export class StrideConnector implements IConnector {
   }
 
   public startConversation(address: IAddress, cb: (err: Error, address?: IAddress) => void): void {
-    // TODO this needs this first => https://jira.atlassian.com/browse/STRIDE-965
+    (async () => {
+      const client   = await this.createClient(address.bot.id)
+      const response = await client.openConversation(address.user.id)
+
+      if (response.id) {
+        cb(null, { ...address, conversation: { id: response.id } })
+      } else {
+        cb(new Error(response.message), null)
+      }
+    })()
   }
 
   public update(message: IMessage, done: (err: Error, address?: IAddress) => void): void {
